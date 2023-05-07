@@ -1,15 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib import messages
 
-from app_otima.models import Fornecedor
-from app_otima.forms import FornecedorForm
+from app_otima.models import Fornecedor, Cliente
+from app_otima.forms import FornecedorForm, clientesForm
 
-from app_otima.models import Usuario
-from app_otima.forms import UsuarioForm
+from app_otima.forms import UsuarioForm, EditUsuarioForm
 
 def login(request):
     if request.method == 'POST':
@@ -70,20 +69,24 @@ def editar_fornecedor(request, fornecedor_id):
 
 @login_required
 def usuarios(request):
-    usuarios = Usuario.objects.all()
+    usuarios = User.objects.all()
     return render (request, 'usuarios/usuarios.html', {
         'title': 'Usuários',
         'usuarios': usuarios
-        })
+    })
 
 @login_required
 def adicionar_usuario(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
         if form.is_valid():
-            novo_usuario = form.save()
+            dados = form.cleaned_data
+            user = form.save(commit=False)
+            
+            user.set_password(dados['password'])
+            user.save()
 
-            messages.success(request, f'Usuario "{novo_usuario.nome}" adicionado com sucesso!')
+            messages.success(request, f'Usuario "{user.username}" adicionado com sucesso!')
             return redirect('usuarios')
     else:
         form = UsuarioForm()
@@ -94,9 +97,74 @@ def adicionar_usuario(request):
 
 
 @login_required
-def clientes(request):
-    return render(request, 'clientes/clientes.html', {'title': 'Clientes'})
+def editar_usuario(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
 
+    if request.method == 'POST':
+        form = EditUsuarioForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f'Usuario "{user.username}" editado com sucesso!')
+            return redirect('usuarios')
+    else:
+        form = EditUsuarioForm(instance=user)
+    return render(request, 'usuarios/adicionar_user.html', {
+        'title': f'Editar Usuario: {user.username}',
+        'form': form
+    })
+
+
+@login_required
+def deletar_usuario(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    user.delete()
+    messages.success(request, f'Usuario "{user.username}" deletado com sucesso!')
+    return redirect('usuarios')
+
+
+@login_required
+def editar_senha_usuario(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f'Senha do usuário "{user.username}" alterada com sucesso!')
+            return redirect('usuarios')
+    else:
+        form = SetPasswordForm(user)
+    return render(request, 'usuarios/adicionar_user.html', {
+        'title': f'Alterar Senha do Usuario: {user.username}',
+        'form': form
+    })
+
+
+@login_required
+def clientes(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'clientes/clientes.html', {
+        'title': 'Cliente',
+        'clientes': clientes
+                                                      
+    })
+
+@login_required
+def adicionar_clientes(request):
+    if request.method == 'POST':
+        form = clientesForm(request.POST)
+        if form.is_valid():
+            novo_cliente = form.save()
+
+            messages.success(request, f'Cliente "{novo_cliente.nome}" adicionado com sucesso!')
+            return redirect('clientes')
+    else:
+        form = clientesForm()
+    return render(request, 'clientes/adicionar_clientes.html', {
+        'title': 'Cadastrar Clientes',
+        'form': form
+    })
 
 @login_required
 def pagamentos(request):

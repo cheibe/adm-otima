@@ -18,7 +18,7 @@
                 <tbody>
                     {% for Usuario in usuarios %}
                         <tr>
-                            <td>{{ Usuario.nome }}</td>
+                            <td>{{ Usuario.username }}</td>
                             <td>{{ Usuario.email }}</td>
                             <td>
                                 <div class="dropdown">
@@ -26,8 +26,9 @@
                                       Opções
                                     </button>
                                     <div class="dropdown-menu">
-                                      <a class="dropdown-item" href="#">Editar</a>
-                                      <a class="dropdown-item" href="#">Deletar</a>
+                                      <a class="dropdown-item" href="{% url 'editar_user' Usuario.id %}">Editar</a>
+                                      <a class="dropdown-item" href="{% url 'alterar_senha_user' Usuario.id %}">Alterar Senha</a>
+                                      <a class="dropdown-item" href="{% url 'deletar_user' Usuario.id %}">Deletar</a>
                                     </div>
                                 </div>
                             </td>
