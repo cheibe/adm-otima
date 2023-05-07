@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+    <a href="{% url 'adicionar_user' %}" class="btn btn-primary mb-3">
+        <span class="fas fa-plus mr-1"></span>
+        Cadastrar
+    </a>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Opções</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Usuario in usuarios %}
+                        <tr>
+                            <td>{{ Usuario.nome }}</td>
+                            <td>{{ Usuario.email }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                                      Opções
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="#">Editar</a>
+                                      <a class="dropdown-item" href="#">Deletar</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
