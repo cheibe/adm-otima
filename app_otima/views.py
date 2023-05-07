@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib import messages
 
-from app_otima.models import Fornecedor, Cliente
-from app_otima.forms import FornecedorForm, clientesForm
+from app_otima.models import Fornecedor, Cliente, Recebimento
+from app_otima.forms import FornecedorForm, clientesForm, RecebimentoForm
 
 from app_otima.forms import UsuarioForm, EditUsuarioForm
 
@@ -173,4 +173,25 @@ def pagamentos(request):
 
 @login_required
 def recebimentos(request):
-    return render(request, 'recebimentos/recebimentos.html', {'title': 'Recebimentos'})
+    recebimentos = Recebimento.objects.all()
+
+    return render(request, 'recebimentos/recebimentos.html', {
+        'title': 'Recebimentos',
+        'recebimentos': recebimentos
+    })
+
+
+@login_required
+def adicionar_recebimento(request):
+    if request.method == 'POST':
+        form = RecebimentoForm(request.POST)
+        if form.is_valid():
+            recebimento = form.save()
+            messages.success(request, f'Recebimento {recebimento.descricao} adicionado com sucesso!')
+            return redirect('recebimentos')
+    else:
+        form = RecebimentoForm()
+    return render(request, 'recebimentos/adicionar_recebimento.html', {
+        'title': 'Adicionar Recebimento',
+        'form': form
+    })

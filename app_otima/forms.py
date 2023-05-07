@@ -1,5 +1,5 @@
 from django import forms
-from app_otima.models import Fornecedor, Cliente
+from app_otima.models import Fornecedor, Cliente, Recebimento
 
 from django.contrib.auth.models import User
 
@@ -67,3 +67,13 @@ class clientesForm(forms.ModelForm):
             'cidade', 
             'estado'
         ]
+
+
+class RecebimentoForm(forms.ModelForm):
+
+    class Meta:
+        model = Recebimento
+        fields = '__all__'
+        widgets = {
+            'data_vencimento': forms.widgets.DateInput(attrs={'type': 'date'})
+        }
