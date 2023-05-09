@@ -30,7 +30,13 @@ def logout(request):
 
 @login_required
 def home(request):
-    return render(request, 'dashboard/home.html', {'title': 'Dashboard'})
+    pagamento = Pagamento.objects.order_by('data_vencimento')[:3]
+    recebimento = Recebimento.objects.order_by('data_vencimento')[:3]
+    return render(request, 'dashboard/home.html', {
+        'title': 'Dashboard',
+        'pagamentos': pagamento,
+        'recebimentos': recebimento
+        })
 
 
 @login_required
@@ -64,7 +70,7 @@ def adicionar_fornecedor(request):
 def editar_fornecedor(request, fornecedor_id):
     fornecedor = get_object_or_404(Fornecedor, pk=fornecedor_id)
     if request.method == 'POST':
-        form = EditFornecedorForm(request.POST, instance=Fornecedor)
+        form = EditFornecedorForm(request.POST, instance=fornecedor)
         if form.is_valid():
             fornecedor = form.save()
             messages.success(request, f'Fornecedor "{fornecedor.nome}" editado com sucesso!')
@@ -187,7 +193,7 @@ def adicionar_clientes(request):
 def editar_clientes(request, cliente_id):
     cliente = get_object_or_404(Cliente, pk=cliente_id)
     if request.method == 'POST':
-        form = EditclientesForm(request.POST, instance=Cliente)
+        form = EditclientesForm(request.POST, instance=cliente)
         if form.is_valid():
             cliente = form.save()
             messages.success(request, f'Cliente "{cliente.nome}" editado com sucesso!')
