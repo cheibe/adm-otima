@@ -1,9 +1,24 @@
 from django import forms
-from app_otima.models import Fornecedor, Cliente, Recebimento
+from app_otima.models import Fornecedor, Cliente, Recebimento, Pagamento
 
 from django.contrib.auth.models import User
 
 class FornecedorForm(forms.ModelForm):
+    
+    class Meta:
+        model = Fornecedor
+        fields = [
+            'nome', 
+            'telefone', 
+            'documento', 
+            'rua', 
+            'numero', 
+            'bairro', 
+            'cidade', 
+            'estado'
+        ]
+
+class EditFornecedorForm(forms.ModelForm):
     
     class Meta:
         model = Fornecedor
@@ -68,11 +83,55 @@ class clientesForm(forms.ModelForm):
             'estado'
         ]
 
+class EditclientesForm(forms.ModelForm):
+    
+    class Meta:
+        model = Cliente
+        fields = [
+            'nome', 
+            'telefone', 
+            'documento', 
+            'rua', 
+            'numero', 
+            'bairro', 
+            'cidade', 
+            'estado'
+        ]
+
 
 class RecebimentoForm(forms.ModelForm):
 
     class Meta:
         model = Recebimento
+        fields = '__all__'
+        widgets = {
+            'data_vencimento': forms.widgets.DateInput(attrs={'type': 'date'})
+        }
+
+
+class EditRecebimentoForm(forms.ModelForm):
+
+    class Meta:
+        model = Recebimento
+        fields = '__all__'
+        widgets = {
+            'data_vencimento': forms.widgets.DateInput(attrs={'type': 'date'})
+        }
+
+class PagamentoForm(forms.ModelForm):
+
+    class Meta:
+        model = Pagamento
+        fields = '__all__'
+        widgets = {
+            'data_vencimento': forms.widgets.DateInput(attrs={'type': 'date'})
+        }
+
+
+class EditPagamentoForm(forms.ModelForm):
+
+    class Meta:
+        model = Pagamento
         fields = '__all__'
         widgets = {
             'data_vencimento': forms.widgets.DateInput(attrs={'type': 'date'})

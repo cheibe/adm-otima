@@ -6,6 +6,11 @@ RECEBIMENTO_STATUS = [
     ('cancelado', 'Cancelado'),
 ]
 
+PAGAMENTO_STATUS = [
+    ('pendente', 'Pendente'),
+    ('pago', 'Pago'),
+    ('cancelado', 'Cancelado'),
+]
 
 class Fornecedor(models.Model):
     nome = models.CharField(max_length=120, verbose_name='Nome')
@@ -42,3 +47,12 @@ class Recebimento(models.Model):
     data_emissao = models.DateField(auto_now_add=True, verbose_name='Data de Emissão')
     data_vencimento = models.DateField(verbose_name='Data de Vencimento')
     status = models.CharField(max_length=30, choices=RECEBIMENTO_STATUS, default='pendente')
+
+
+class Pagamento(models.Model):
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.SET_NULL, null=True)
+    descricao = models.CharField(max_length=255, verbose_name='Descrição')
+    valor = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Valor')
+    data_emissao = models.DateField(auto_now_add=True, verbose_name='Data de Emissão')
+    data_vencimento = models.DateField(verbose_name='Data de Vencimento')
+    status = models.CharField(max_length=30, choices=PAGAMENTO_STATUS, default='pendente')

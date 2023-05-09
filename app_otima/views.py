@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib import messages
 
-from app_otima.models import Fornecedor, Cliente, Recebimento
-from app_otima.forms import FornecedorForm, clientesForm, RecebimentoForm
+from app_otima.models import Fornecedor, Cliente, Recebimento, Pagamento
+from app_otima.forms import FornecedorForm, clientesForm, RecebimentoForm, PagamentoForm, EditFornecedorForm, EditclientesForm, EditRecebimentoForm, EditPagamentoForm
 
 from app_otima.forms import UsuarioForm, EditUsuarioForm
 
@@ -62,10 +62,27 @@ def adicionar_fornecedor(request):
 
 @login_required
 def editar_fornecedor(request, fornecedor_id):
-    return render(request, 'fornecedores/editar.html', {
-        'title': f'Editar Fornecedor - Teste',
+    fornecedor = get_object_or_404(Fornecedor, pk=fornecedor_id)
+    if request.method == 'POST':
+        form = EditFornecedorForm(request.POST, instance=Fornecedor)
+        if form.is_valid():
+            fornecedor = form.save()
+            messages.success(request, f'Fornecedor "{fornecedor.nome}" editado com sucesso!')
+            return redirect('fornecedores')
+    else:
+        form = EditFornecedorForm(instance=fornecedor)
+    return render(request, 'fornecedores/adicionar.html', {
+        'title': f'Editar Fornecedor: {fornecedor.nome}',
+        'form': form
     })
 
+@login_required
+def deletar_fornecedor(request, fornecedor_id):
+    fornecedor = get_object_or_404(Fornecedor, pk=fornecedor_id)
+
+    fornecedor.delete()
+    messages.success(request, f'Fornecedor "{fornecedor.nome}" deletado com sucesso!')
+    return redirect('fornecedores')
 
 @login_required
 def usuarios(request):
@@ -167,9 +184,76 @@ def adicionar_clientes(request):
     })
 
 @login_required
-def pagamentos(request):
-    return render(request, 'pagamentos/pagamentos.html', {'title': 'Pagamentos'})
+def editar_clientes(request, cliente_id):
+    cliente = get_object_or_404(Cliente, pk=cliente_id)
+    if request.method == 'POST':
+        form = EditclientesForm(request.POST, instance=Cliente)
+        if form.is_valid():
+            cliente = form.save()
+            messages.success(request, f'Cliente "{cliente.nome}" editado com sucesso!')
+            return redirect('clientes')
+    else:
+        form = EditclientesForm(instance=cliente)
+    return render(request, 'clientes/adicionar_clientes.html', {
+        'title': f'Editar Cliente: {cliente.nome}',
+        'form': form
+    })
 
+@login_required
+def deletar_clientes(request, cliente_id):
+    cliente = get_object_or_404(Cliente, pk=cliente_id)
+
+    cliente.delete()
+    messages.success(request, f'Cliente "{cliente.nome}" deletado com sucesso!')
+    return redirect('clientes')
+
+
+@login_required
+def pagamentos(request):
+    pagamento = Pagamento.objects.all()
+    return render(request, 'pagamentos/pagamentos.html', {
+        'title': 'Pagamentos',
+        'pagamentos': pagamento
+        })
+
+@login_required
+def adicionar_pagamento(request):
+    if request.method == 'POST':
+        form = PagamentoForm(request.POST)
+        if form.is_valid():
+            pagameento = form.save()
+            messages.success(request, f'Pagamento adicionado com sucesso!')
+            return redirect('pagamentos')
+    else:
+        form = PagamentoForm()
+    return render(request, 'pagamentos/adicionar_pagamento.html', {
+        'title': 'Adicionar Pagamento',
+        'form': form
+    })
+
+@login_required
+def editar_pagamento(request, pagamento_id):
+    pagamento = get_object_or_404(Pagamento, pk=pagamento_id)
+    if request.method == 'POST':
+        form = EditPagamentoForm(request.POST, instance=pagamento)
+        if form.is_valid():
+            pagamento = form.save()
+            messages.success(request, f'Pagamento editado com sucesso!')
+            return redirect('pagamentos')
+    else:
+        form = EditPagamentoForm(instance=pagamento)
+    return render(request, 'pagamentos/adicionar_pagamento.html', {
+        'title': f'Editar Pagamento: ',
+        'form': form
+    })
+
+@login_required
+def deletar_pagamento(request, pagamento_id):
+    pagamento = get_object_or_404(Pagamento, pk=pagamento_id)
+
+    pagamento.delete()
+    messages.success(request, f'Pagamento deletado com sucesso!')
+    return redirect('pagamentos')
 
 @login_required
 def recebimentos(request):
@@ -187,7 +271,7 @@ def adicionar_recebimento(request):
         form = RecebimentoForm(request.POST)
         if form.is_valid():
             recebimento = form.save()
-            messages.success(request, f'Recebimento {recebimento.descricao} adicionado com sucesso!')
+            messages.success(request, f'Recebimento adicionado com sucesso!')
             return redirect('recebimentos')
     else:
         form = RecebimentoForm()
@@ -195,3 +279,27 @@ def adicionar_recebimento(request):
         'title': 'Adicionar Recebimento',
         'form': form
     })
+
+@login_required
+def editar_recebimento(request, recebimento_id):
+    recebimento = get_object_or_404(Recebimento, pk=recebimento_id)
+    if request.method == 'POST':
+        form = EditRecebimentoForm(request.POST, instance=recebimento)
+        if form.is_valid():
+            recebimento = form.save()
+            messages.success(request, f'Recebimento editado com sucesso!')
+            return redirect('recebimentos')
+    else:
+        form = EditRecebimentoForm(instance=recebimento)
+    return render(request, 'recebimentos/adicionar_recebimento.html', {
+        'title': f'Editar Recimento: ',
+        'form': form
+    })
+
+@login_required
+def deletar_recebimento(request, recebimento_id):
+    recebimento = get_object_or_404(Recebimento, pk=recebimento_id)
+
+    recebimento.delete()
+    messages.success(request, f'Recebimento deletado com sucesso!')
+    return redirect('recebimentos')
