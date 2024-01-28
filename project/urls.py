@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from app_otima import views
+from app_dashboard import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

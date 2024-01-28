@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_otima', '0004_rename_clientes_cliente'),
+        ('app_dashboard', '0004_rename_clientes_cliente'),
     ]
 
     operations = [
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('data_emissao', models.DateField(auto_now_add=True, verbose_name='Data de Emissão')),
                 ('data_vencimento', models.DateField(verbose_name='Data de Vencimento')),
                 ('status', models.CharField(choices=[('pendente', 'Pendente'), ('pago', 'Pago'), ('cancelado', 'Cancelado')], max_length=30)),
-                ('cliente', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='app_otima.cliente')),
+                ('cliente', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='app_dashboard.cliente')),
             ],
         ),
     ]

@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib import messages
 
-from app_otima.models import Fornecedor, Cliente, Recebimento, Pagamento
-from app_otima.forms import FornecedorForm, clientesForm, RecebimentoForm, PagamentoForm, EditFornecedorForm, EditclientesForm, EditRecebimentoForm, EditPagamentoForm
+from app_dashboard.models import Fornecedor, Cliente, Recebimento, Pagamento
+from app_dashboard.forms import FornecedorForm, clientesForm, RecebimentoForm, PagamentoForm, EditFornecedorForm, EditclientesForm, EditRecebimentoForm, EditPagamentoForm
 
-from app_otima.forms import UsuarioForm, EditUsuarioForm
+from app_dashboard.forms import UsuarioForm, EditUsuarioForm
 
 def login(request):
     if request.method == 'POST':

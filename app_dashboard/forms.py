@@ -1,5 +1,5 @@
 from django import forms
-from app_otima.models import Fornecedor, Cliente, Recebimento, Pagamento
+from app_dashboard.models import Fornecedor, Cliente, Recebimento, Pagamento
 
 from django.contrib.auth.models import User
 

@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_otima', '0003_clientes_delete_usuario'),
+        ('app_dashboard', '0003_clientes_delete_usuario'),
     ]
 
     operations = [
